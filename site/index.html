@@ -566,7 +566,7 @@
   document.querySelectorAll(".rv, #mask-demo, #cmp").forEach((el) => io.observe(el));
 
   const reel = $("reel"), reelBtn = $("reel-btn");
-  const vio = new IntersectionObserver(([en]) => { if (en.isIntersecting) reel.play().catch(() => {}); else reel.pause(); }, { threshold: 0.3 });
+  const vio = new IntersectionObserver(([en]) => { if (en.isIntersecting) { if (!matchMedia("(prefers-reduced-motion: reduce)").matches) reel.play().catch(() => {}); } else reel.pause(); }, { threshold: 0.3 });
   vio.observe(reel);
   // Browsers only autoplay muted, so the reel starts silent; the button restarts it with the
   // voice-over and music.
