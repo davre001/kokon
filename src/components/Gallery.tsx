@@ -104,15 +104,17 @@ export function Gallery() {
         }}
       >
         {items.map((g) => (
-          <div key={g.id} className="card" onClick={() => reopen(g)} title={g.prompt}>
-            <img src={urls.genThumb(g.id)} alt="" loading="lazy" draggable={false} />
+          <div key={g.id} className="card" tabIndex={0} onClick={() => reopen(g)} onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !(e.target instanceof HTMLButtonElement)) { e.preventDefault(); reopen(g); } }} title={g.prompt}>
+            <img src={urls.genThumb(g.id)} alt={g.prompt.trim().slice(0, 80)} loading="lazy" draggable={false} />
             <div className={`card-actions ${g.favorite ? "fav" : ""}`} onClick={(e) => e.stopPropagation()}>
-              <button title={g.favorite ? "Remove from favorites" : "Favorite"} onClick={() => toggleFav(g)}>
+              <button aria-label={g.favorite ? "Remove from favorites" : "Add to favorites"} title={g.favorite ? "Remove from favorites" : "Favorite"} onClick={(e) => { e.stopPropagation(); toggleFav(g); }}>
                 <Heart size={14} fill={g.favorite ? "currentColor" : "none"} />
               </button>
               <button
+                aria-label="Delete image"
                 title="Delete"
-                onClick={async () => {
+                onClick={async (e) => {
+                  e.stopPropagation();
                   if (await native.confirm("Delete this image from the gallery and disk?", "Delete")) remove(g);
                 }}
               >
